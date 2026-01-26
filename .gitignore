@@ -1,0 +1,25 @@
+# Docker
+docker-compose.override.yml
+docker-compose.*.yml
+
+# Логи
+*.log
+logs/
+
+# Временные файлы
+tmp/
+temp/
+*.tmp
+*.temp
+
+# БД
+*.db
+*.sqlite
+*.sqlite3
+dump.sql
+backup/
+
+# Тестовые данные
+test_output/
+coverage/
+.pytest_cache/
