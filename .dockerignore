@@ -1,11 +1,15 @@
-# ВСЕ кроме необходимого для сборки
-**/*
-!requirements.txt
-!setup.py
-!pyproject.toml
-!README.md
-!LICENSE
-!main.py
-!app/
-!src/
-!package.json  # если Node.js
+compose.yaml
+Dockerfile
+Dockerfile.python
+.dockerignore
+.env
+.git
+.gitignore
+/haproxy
+init.sql
+LICENSE
+main.py
+/nginx
+proxy.yaml
+README.md
+schema.pdf
