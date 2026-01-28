@@ -8,7 +8,6 @@ Dockerfile.python
 /haproxy
 init.sql
 LICENSE
-main.py
 /nginx
 proxy.yaml
 README.md
