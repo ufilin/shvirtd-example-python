@@ -13,7 +13,6 @@ db_host = os.environ.get('DB_HOST', '127.0.0.1')
 db_user = os.environ.get('DB_USER', 'app')
 db_password = os.environ.get('DB_PASSWORD', 'very_strong')
 db_name = os.environ.get('DB_NAME', 'example')
-db_table = os.environ.get('TABLE_NAME', 'requests')
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -23,7 +22,7 @@ async def lifespan(app: FastAPI):
         with get_db_connection() as db:
             cursor = db.cursor()
             create_table_query = f"""
-            CREATE TABLE IF NOT EXISTS {db_name}.{db_table} (
+            CREATE TABLE IF NOT EXISTS {db_name}.requests (
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 request_date DATETIME,
                 request_ip VARCHAR(255)

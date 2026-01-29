@@ -2,40 +2,56 @@ include:
   - path: ./proxy.yaml
 
 services:
-  web:
-    build: 
-      context: .
-      dockerfile: Dockerfile.python
-    container_name: web
-    environment:
-        - DB_HOST=db
-        - DB_USER=${MYSQL_USER}
-        - DB_PASSWORD=${MYSQL_PASSWORD}
-        - DB_NAME=${MYSQL_DATABASE}
-    networks:
-      backend:
-        ipv4_address: 172.20.0.5
-          #depends_on:
-          #- db
-    restart: on-failure
-
   db:
-    image: mysql:8.0
-    container_name: mysql_db
-    volumes:
-      - mysql_data:/var/lib/mysql
+    image: mysql:8
+    container_name: db
+      #volumes:
+      #- mysql_data:/var/lib/mysql
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
       - MYSQL_DATABASE=${MYSQL_DATABASE}
       - MYSQL_USER=${MYSQL_USER}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
-      - MYSQL_ROOT_HOST="%"
-        #ports:
-        #- "3306:3306"
+      - MYSQL_ROOT_HOST=%
+    ports:
+      - "3306:3306"
     networks:
       backend:
         ipv4_address: 172.20.0.10
     restart: on-failure
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 40s
+
+    
+  web:
+   build:
+     context: .
+     dockerfile: ./Dockerfile.python
+   container_name: web
+   environment:
+     - DB_HOST=db
+     - DB_USER=${MYSQL_USER}
+     - DB_PASSWORD=${MYSQL_PASSWORD}
+     - DB_NAME=${MYSQL_DATABASE}
+     - DB_PORT=3306
+   networks:
+     backend:
+       ipv4_address: 172.20.0.5
+   restart: on-failure
+   depends_on:
+     db:
+       condition: service_healthy
+   ports: 
+     - "5000:5000"
+   command: >
+      sh -c "
+        sleep 25 &&
+        python main.py
+      "
 
 networks:
   backend:
@@ -44,5 +60,5 @@ networks:
       config:
         - subnet: 172.20.0.0/24
           gateway: 172.20.0.1
-volumes:
-  mysql_data:
+            #volumes:
+  # mysql_data:

@@ -2,11 +2,9 @@ compose.yaml
 Dockerfile
 Dockerfile.python
 .dockerignore
-.env
 .git
 .gitignore
 /haproxy
-init.sql
 LICENSE
 /nginx
 proxy.yaml
